@@ -9,24 +9,35 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "14.2.3",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "@portabletext/react": "^5.0.0",
+    "@react-three/drei": "^9.102.0",
+    "@react-three/fiber": "^8.16.1",
+    "@sanity/icons": "^3.7.4",
+    "@sanity/image-url": "^1.2.0",
+    "@sanity/vision": "^4.15.0",
     "framer-motion": "^11.0.8",
     "gsap": "^3.12.5",
-    "@react-three/fiber": "^8.16.1",
-    "@react-three/drei": "^9.102.0",
-    "three": "^0.162.0",
-    "lucide-react": "^0.363.0"
+    "lucide-react": "^0.363.0",
+    "next": "14.2.3",
+    "next-sanity": "^11.6.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sanity": "^4.15.0",
+    "styled-components": "^6.1.19",
+    "three": "^0.162.0"
   },
   "devDependencies": {
+    "@sanity/client": "^7.12.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/three": "^0.162.0",
-    "typescript": "^5",
     "autoprefixer": "^10.4.19",
+    "dotenv": "^17.2.3",
     "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3"
+    "tailwindcss": "^3.4.3",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5"
   }
 }
