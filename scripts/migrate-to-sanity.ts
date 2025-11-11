@@ -24,6 +24,11 @@ const client = createClient({
   token: process.env.SANITY_API_TOKEN, // You'll need to add this to .env.local
 })
 
+// Generate a simple unique key
+function generateKey() {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+}
+
 // Convert blog post content to Sanity block content
 function convertContentToBlocks(content: string) {
   const blocks = []
@@ -36,10 +41,12 @@ function convertContentToBlocks(content: string) {
     if (para.startsWith('**') && para.includes(':**')) {
       const headingText = para.replace(/\*\*/g, '').trim()
       blocks.push({
+        _key: generateKey(),
         _type: 'block',
         style: 'h2',
         children: [
           {
+            _key: generateKey(),
             _type: 'span',
             text: headingText,
             marks: [],
@@ -57,6 +64,7 @@ function convertContentToBlocks(content: string) {
           // Regular text
           if (parts[i]) {
             children.push({
+              _key: generateKey(),
               _type: 'span',
               text: parts[i],
               marks: [],
@@ -66,6 +74,7 @@ function convertContentToBlocks(content: string) {
           // Bold text
           if (parts[i]) {
             children.push({
+              _key: generateKey(),
               _type: 'span',
               text: parts[i],
               marks: ['strong'],
@@ -75,6 +84,7 @@ function convertContentToBlocks(content: string) {
       }
 
       blocks.push({
+        _key: generateKey(),
         _type: 'block',
         style: 'normal',
         children,
@@ -83,10 +93,12 @@ function convertContentToBlocks(content: string) {
     // Regular paragraph
     else {
       blocks.push({
+        _key: generateKey(),
         _type: 'block',
         style: 'normal',
         children: [
           {
+            _key: generateKey(),
             _type: 'span',
             text: para.trim(),
             marks: [],
