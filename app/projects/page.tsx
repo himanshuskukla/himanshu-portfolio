@@ -1,12 +1,22 @@
-'use client'
-
 import { motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, TrendingUp, Users, DollarSign, Target } from 'lucide-react'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
+import { getAllProjectsFromSanity } from '@/sanity/lib/queries'
+import ProjectsPageClient from './ProjectsPageClient'
 
-export default function ProjectsPage() {
-  const projects = [
+// Enable ISR - revalidate every 5 minutes
+export const revalidate = 300
+
+export default async function ProjectsPage() {
+  // Fetch projects from Sanity
+  const projects = await getAllProjectsFromSanity()
+
+  return <ProjectsPageClient projects={projects} />
+}
+
+// Original hardcoded projects data (keeping as fallback - not used if Sanity is configured)
+const fallbackProjects = [
     {
       id: 1,
       title: "Digital Twin Consortium",

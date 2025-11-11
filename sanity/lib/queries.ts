@@ -149,3 +149,61 @@ export async function getAllCategoriesFromSanity() {
     return getLocalCategories()
   }
 }
+
+// Get all projects from Sanity
+export async function getAllProjectsFromSanity() {
+  if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === 'your_project_id_here') {
+    console.log('📝 Sanity not configured, projects unavailable')
+    return []
+  }
+
+  try {
+    const query = `*[_type == "project"] | order(order asc) {
+      _id,
+      title,
+      subtitle,
+      category,
+      description,
+      fullDescription,
+      challenge,
+      solution,
+      impact,
+      technologies,
+      metrics,
+      image,
+      unsplashId,
+      gradient,
+      order
+    }`
+
+    const projects = await client.fetch(query)
+
+    if (!projects || projects.length === 0) {
+      console.log('📝 No projects in Sanity yet')
+      return []
+    }
+
+    console.log(`✅ Fetched ${projects.length} projects from Sanity`)
+
+    // Transform projects to match expected format
+    return projects.map((project: any) => ({
+      id: parseInt(project._id.replace(/[^\d]/g, '')) || Math.floor(Math.random() * 10000),
+      title: project.title,
+      subtitle: project.subtitle,
+      category: project.category,
+      description: project.description,
+      fullDescription: project.fullDescription,
+      challenge: project.challenge,
+      solution: project.solution,
+      impact: project.impact || [],
+      technologies: project.technologies || [],
+      metrics: project.metrics || [],
+      image: project.image ? urlFor(project.image).width(800).height(600).url() : `https://images.unsplash.com/photo-${project.unsplashId}?w=800&h=600&fit=crop`,
+      unsplashId: project.unsplashId,
+      gradient: project.gradient || 'from-blue-500 to-purple-600',
+    }))
+  } catch (error) {
+    console.error('Error fetching projects from Sanity:', error)
+    return []
+  }
+}
