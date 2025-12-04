@@ -1,23 +1,18 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getBlogPostBySlug, getAllBlogPostsFromSanity } from '@/sanity/lib/queries'
+import { blogPosts } from '@/app/data/blogPosts'
 import BlogPostClient from './BlogPostClient'
 
-// Enable ISR - revalidate every 5 minutes (300 seconds)
-export const revalidate = 300
-
 // Generate static params for all blog posts at build time
-export async function generateStaticParams() {
-  const posts = await getAllBlogPostsFromSanity()
-
-  return posts.map((post: any) => ({
+export function generateStaticParams() {
+  return blogPosts.map((post) => ({
     slug: post.slug,
   }))
 }
 
 // Generate metadata for SEO
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const post = await getBlogPostBySlug(params.slug)
+export function generateMetadata({ params }: { params: { slug: string } }) {
+  const post = blogPosts.find(p => p.slug === params.slug)
 
   if (!post) {
     return {
@@ -36,9 +31,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  // Fetch the blog post from Sanity
-  const post = await getBlogPostBySlug(params.slug)
+export default function BlogPostPage({ params }: { params: { slug: string } }) {
+  // Find the blog post from local data
+  const post = blogPosts.find(p => p.slug === params.slug)
 
   // If post not found, show 404
   if (!post) {
@@ -57,10 +52,9 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     )
   }
 
-  // Fetch all posts to find related posts
-  const allPosts = await getAllBlogPostsFromSanity()
-  const relatedPosts = allPosts
-    .filter((p: any) => p.category === post.category && p.slug !== post.slug)
+  // Find related posts
+  const relatedPosts = blogPosts
+    .filter((p) => p.category === post.category && p.slug !== post.slug)
     .slice(0, 3)
 
   return <BlogPostClient post={post} relatedPosts={relatedPosts} />
